@@ -1,0 +1,72 @@
+﻿@page "/PersonalMT"
+@using PryFront_Marathon.Models
+@inject HttpClient Http
+
+<PageTitle>Personal</PageTitle>
+
+<h3>Gestión Personal </h3>
+
+@if (lista_Personal == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Dni</th>
+                <th>Cod Perfil</th>
+                <th>Cod_TpTrab</th>
+                <th>Cod Local</th>
+                <th>Nom. y Apell</th>
+                <th>Correo</th>
+                <th>Fec_Nac</th>
+                <th>Usuario</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ls_perso in lista_Personal)
+            {
+
+                <tr>
+                    <td>@ls_perso.Dni_Personal</td>
+                    <td>@ls_perso.Cod_Perfil</td>
+                    <td>@ls_perso.Cod_Tipo_Trabajo</td>
+                    <td>@ls_perso.Cod_Local</td>
+                    <td>@ls_perso.Nombres @ls_perso.Apellidos</td>
+                    <td>@ls_perso.Correo</td>
+                    <td>@ls_perso.Fecha_Nac</td>
+                    <td>@ls_perso.User_Per</td>
+                    <td>@ls_perso.Estado</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Personal personal = new Personal();
+    public static List<Personal> lista_Personal = new List<Personal>();
+    string res = "En proceso...";
+
+
+    async Task ListadodePersonal()
+        {
+        var resp = await Http.GetFromJsonAsync<List<Personal>>("https://localhost:44347/GetListaPersonal");
+        lista_Personal = resp;
+    }
+
+
+    protected override async Task OnInitializedAsync()
+        {
+        //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
+        await ListadodePersonal();
+        }
+
+
+
+
+
+}
