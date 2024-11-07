@@ -1,0 +1,166 @@
+﻿@page "/PersonalMT/RegistroPersonal"
+@using PryFront_Marathon.Models
+@inject HttpClient Http
+
+<h3>Registro Personal</h3>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> DNI </label>
+            <input type="text" class="form-control" @bind-value="personal.Dni_Personal" />
+        </div>
+        <div class="col-md-4">
+            <label> Nombres </label>
+            <input type="text" class="form-control" @bind-value="personal.Nombres" />
+        </div>
+        <div class="col-md-4">
+            <label> Apellidos </label>
+            <input type="text" class="form-control" @bind-value="personal.Apellidos" />
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> Fecha Nacimiento </label>
+            <input type="date" min="1924-01-01" class="form-control" @bind-value="personal.Fecha_Nac" />
+        </div>
+        <div class="col-md-4">
+            <label> Correo </label>
+            <input type="email" class="form-control" @bind-value="personal.Correo" />
+        </div>
+        <div class="col-md-4">
+            <label> Género </label>
+            <select class="form-select" @bind="personal.Genero">
+                <option selected>--Selecciona--</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> Perfil Personal </label>
+            <select class="form-select" @bind="personal.Cod_Perfil" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_pfPersonal)
+                {
+                    <option value="@item.Cod_Perfil">@item.Descripcion</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Tipo Trabajo </label>
+            <select class="form-select" @bind="personal.Cod_Tipo_Trabajo" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_tpTrab)
+                {
+                    <option value="@item.Cod_Tipo_Trabajo">@item.Descripcion</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Local </label>
+            <select class="form-select" @bind="personal.Cod_Local" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_localMT)
+                {
+                    <option value="@item.Cod_Local">@item.Nom_Local</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-4 ">
+        <div class="col-md-6">
+            <label> Usuario </label>
+            <input type="text" class="form-control" @bind-value="personal.User_Per"/>
+        </div>
+        <div class="col-md-6">
+            <label> Contraseña </label>
+            <input type="password" class="form-control" @bind-value="personal.Contra_Per"/>
+        </div>
+    </div>
+
+
+
+
+    <div class="row mb-4 ">
+        <button class="btn btn-outline-success" @onclick=IngresarPersonal>Ingresar</button>
+    </div>
+    
+</div>
+
+
+
+
+<div class="p-1">
+
+    <label>@res</label>
+    
+    
+
+    <br />
+
+    <NavLink class="nav-link" href="PersonalMT">
+        <button class="btn btn-primary">Regresar</button>
+    </NavLink>
+
+</div>
+
+
+
+
+@code {
+
+    Personal personal = new Personal();
+    
+    public static List<PfPersonal> lista_pfPersonal = new List<PfPersonal>();
+    public static List<Tipo_Trabajo> lista_tpTrab = new List<Tipo_Trabajo>();
+    public static List<LocalMT> lista_localMT = new List<LocalMT>();
+
+    string res = "En proceso...";
+
+    async Task IngresarPersonal()
+    {
+        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertPersonal", personal);
+        res = await resJson.Content.ReadAsStringAsync();
+        //
+        personal.Dni_Personal = string.Empty;
+        personal.Nombres = string.Empty;
+        personal.Apellidos = string.Empty;
+        personal.Fecha_Nac = DateOnly.MinValue;
+        personal.Correo = string.Empty;
+        personal.Genero = "--Selecciona--";
+        personal.Cod_Perfil = -1;
+        personal.Cod_Tipo_Trabajo = -1;
+        personal.Cod_Local = -1;
+        personal.User_Per = string.Empty;
+        personal.Contra_Per = string.Empty;
+    }
+
+    async Task ListadodePerfiles()
+    {
+        var resp = await Http.GetFromJsonAsync<List<PfPersonal>>("https://localhost:44347/GetListaPerfil_Personal");
+        lista_pfPersonal = resp;
+    }
+    async Task ListadodeTpTabajo()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Tipo_Trabajo>>("https://localhost:44347/GetListaTipo_Trabajo");
+        lista_tpTrab = resp;
+    }
+    async Task ListadodeLocalMT()
+    {
+        var resp = await Http.GetFromJsonAsync<List<LocalMT>>("https://localhost:44347/GetListaLocalMT");
+        lista_localMT = resp;
+    }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
+        await ListadodePerfiles();
+        await ListadodeTpTabajo();
+        await ListadodeLocalMT();
+
+    }
+}

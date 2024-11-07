@@ -4,7 +4,17 @@
 
 <PageTitle>Personal</PageTitle>
 
+@{
+    var registerUrl = $"PersonalMT/RegistroPersonal";
+}
+
 <h3>Gestión Personal </h3>
+<div class="p-1">
+    <NavLink class="nav-link" href=@registerUrl>
+        <button class="btn btn-primary">Registrar Personal</button>
+    </NavLink>
+    
+</div>
 
 @if (lista_Personal == null)
 {
