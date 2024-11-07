@@ -111,8 +111,10 @@
 
 @code {
 
+    //Objeto Personal
     Personal personal = new Personal();
     
+    //Listados de Perfiles, Tipo de Trabajo y Local
     public static List<PfPersonal> lista_pfPersonal = new List<PfPersonal>();
     public static List<Tipo_Trabajo> lista_tpTrab = new List<Tipo_Trabajo>();
     public static List<LocalMT> lista_localMT = new List<LocalMT>();
@@ -123,7 +125,8 @@
     {
         var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertPersonal", personal);
         res = await resJson.Content.ReadAsStringAsync();
-        //
+        
+        //Limpiamos los Componentes de la Interfaz
         personal.Dni_Personal = string.Empty;
         personal.Nombres = string.Empty;
         personal.Apellidos = string.Empty;
@@ -137,16 +140,21 @@
         personal.Contra_Per = string.Empty;
     }
 
+    //Metodo para cargar la lista de perfiles
     async Task ListadodePerfiles()
     {
         var resp = await Http.GetFromJsonAsync<List<PfPersonal>>("https://localhost:44347/GetListaPerfil_Personal");
         lista_pfPersonal = resp;
     }
+
+    //Metodo para cargar la lista de Tipo de Trabajo
     async Task ListadodeTpTabajo()
     {
         var resp = await Http.GetFromJsonAsync<List<Tipo_Trabajo>>("https://localhost:44347/GetListaTipo_Trabajo");
         lista_tpTrab = resp;
     }
+
+    //Metodo para cargar la lista de Local
     async Task ListadodeLocalMT()
     {
         var resp = await Http.GetFromJsonAsync<List<LocalMT>>("https://localhost:44347/GetListaLocalMT");
