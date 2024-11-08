@@ -13,7 +13,6 @@
         public string Genero { get; set; }
         public string User_Per { get; set; }
         public string Contra_Per { get; set; }
-
-        public int Estado = 1;
+        public int Estado { get; set; }
     }
 }
