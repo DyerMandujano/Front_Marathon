@@ -1,0 +1,139 @@
+﻿@page "/ClienteMT/RegistroCliente"
+@using PryFront_Marathon.Models
+@inject HttpClient Http
+
+<h3>Registro Cliente</h3>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> DNI </label>
+            <input type="text" class="form-control" @bind-value="cliente.Dni_Cliente" />
+        </div>
+        <div class="col-md-4">
+            <label> Nombres </label>
+            <input type="text" class="form-control" @bind-value="cliente.Nombres" />
+        </div>
+        <div class="col-md-4">
+            <label> Apellidos </label>
+            <input type="text" class="form-control" @bind-value="cliente.Apellidos" />
+        </div>
+    </div>
+</div>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> Fecha Nacimiento </label>
+            <input type="date" min="1924-01-01" class="form-control" @bind-value="cliente.Fecha_Nac" />
+        </div>
+        <div class="col-md-4">
+            <label> Correo </label>
+            <input type="email" class="form-control" @bind-value="cliente.Correo" />
+        </div>
+        <div class="col-md-4">
+            <label> Género </label>
+            <select class="form-select" @bind="cliente.Genero">
+                <option selected>--Selecciona--</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+            </select>
+        </div>
+
+    <div class="row mb-4 ">
+        <div class="col-md-4">
+            <label> Usuario </label>
+            <input type="text" class="form-control" @bind-value="cliente.User_Cli" />
+        </div>
+        <div class="col-md-4">
+            <label> Contraseña </label>
+            <input type="password" class="form-control" @bind-value="cliente.Contra_Cli" />
+        </div>
+        <div class="col-md-4">
+            <label> Estado </label>
+            <select class="form-select" @bind="cliente.Estado">
+                <option value=0>Inactivo</option>
+                <option selected value=1>Activo</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-4 ">
+        <div class="col-md-6">
+            <button class="btn btn-success w-100" @onclick=IngresarCliente>Ingresar</button>
+        </div>
+        <div class="col-md-6">
+            <NavLink class="nav-link" href="ClientelMT">
+                <button class="btn btn-primary w-100">Regresar</button>
+            </NavLink>
+        </div>
+    </div>
+
+    @if (res != "")
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-white text-center p-3" style="background-color: #1db971;">
+                <strong>@res</strong>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@code {
+
+    //Objeto Cliente
+    Cliente cliente = new Cliente();
+
+    //Listados de Perfiles, Tipo de Trabajo y Local
+    public static List<Cod_Membresia> lista_cod_mem = new List<Cod_Membresia>();
+    public static List<Cliente> lista_cliente = new List<Cliente>();
+    string res = "";
+
+    async Task IngresarCliente()
+    {
+
+        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertCliente", cliente);
+        res = await resJson.Content.ReadAsStringAsync();
+
+        //Limpiamos los Componentes de la Interfaz
+        cliente.Dni_Cliente = string.Empty;
+        cliente.Nombres = string.Empty;
+        cliente.Apellidos = string.Empty;
+        cliente.Fecha_Nac = DateOnly.MinValue;
+        cliente.Correo = string.Empty;
+        cliente.Genero = "--Selecciona--";
+        cliente.Estado = 1;
+        cliente.User_Cli = string.Empty;
+        cliente.Contra_Cli = string.Empty;
+
+
+        // Forzar que la interfaz se actualice
+        StateHasChanged();
+
+        //Le colocamos delay para q se pueda observar el mensaje
+        await Task.Delay(2000);
+        //Limpiamos el mensaje
+        res = "";
+    }
+
+    //Metodo para cargar la lista de codigo membresia
+    async Task ListadodeCod_mem()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Cod_Membresia>>("https://localhost:44347/GetListaCod_Membresia");
+        lista_cod_mem = resp;
+    }
+
+    //Metodo para cargar la lista de clientes
+    async Task ListadodeClientes()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaPerfil_Cliente");
+        lista_cliente = resp;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        //llamamos al metodo para cargar la lista de cod_mem ni bien se inicie la pagina
+        await ListadodeCod_mem();
+
+    }
+}
+
