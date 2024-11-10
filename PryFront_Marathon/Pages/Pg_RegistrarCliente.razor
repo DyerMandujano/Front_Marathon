@@ -84,9 +84,8 @@
     //Objeto Cliente
     Cliente cliente = new Cliente();
 
-    //Listados de Perfiles, Tipo de Trabajo y Local
-    public static List<Cod_Membresia> lista_cod_mem = new List<Cod_Membresia>();
-    public static List<Cliente> lista_cliente = new List<Cliente>();
+    //Listados de Cliente
+    public static List<Cliente> lista_Cliente = new List<Cliente>();
     string res = "";
 
     async Task IngresarCliente()
@@ -116,23 +115,17 @@
         res = "";
     }
 
-    //Metodo para cargar la lista de codigo membresia
-    async Task ListadodeCod_mem()
-    {
-        var resp = await Http.GetFromJsonAsync<List<Cod_Membresia>>("https://localhost:44347/GetListaCod_Membresia");
-        lista_cod_mem = resp;
-    }
 
     //Metodo para cargar la lista de clientes
     async Task ListadodeClientes()
     {
         var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaPerfil_Cliente");
-        lista_cliente = resp;
+        lista_Cliente = resp;
     }
     protected override async Task OnInitializedAsync()
     {
-        //llamamos al metodo para cargar la lista de cod_mem ni bien se inicie la pagina
-        await ListadodeCod_mem();
+        //llamamos al metodo para cargar la lista de clientes ni bien se inicie la pagina
+        await ListadodeClientes();
 
     }
 }

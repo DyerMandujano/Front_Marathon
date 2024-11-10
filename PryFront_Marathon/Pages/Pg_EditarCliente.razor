@@ -47,7 +47,7 @@
         </div>
         <div class="col-md-4">
             <label> Estado </label>
-    <select class="form-select" @bind="cliente.Estado">
+            <select class="form-select" @bind="cliente.Estado">
                 <option value=0>Inactivo</option>
                 <option value=1>Activo</option>
             </select>
@@ -83,9 +83,9 @@
     Cliente cliente = new Cliente();
     string res = "";
 
-    //Listados de Cliente y Cod_mem
-    public static List<Cod_Membresia> lista_cod_mem = new List<Cod_Membresia>();
-    public static List<Cliente> lista_cliente = new List<Cliente>();
+    //Listados de Perfiles
+    
+    public static List<Cliente> lista_Cliente = new List<Cliente>();
 
     async Task BuscarPersonal_DNI(string dni)
     {
@@ -110,7 +110,7 @@
     async Task ListadodeClientes()
     {
         var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaPerfil_Cliente");
-        lista_cliente = resp;
+        lista_Cliente = resp;
     }
 
     protected override async Task OnInitializedAsync()
@@ -118,5 +118,6 @@
         //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
         await BuscarPersonal_DNI(dni);
         await ListadodeClientes();
+        await UpdateCliente(dni);
     }
 }
