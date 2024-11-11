@@ -3,7 +3,7 @@
     public class Color
     {
         public int Cod_Color { get; set; }
-        public String Nom_Color { get; set; }
+        public string Nom_Color { get; set; }
         public int Estado { get; set; }
     }
 }

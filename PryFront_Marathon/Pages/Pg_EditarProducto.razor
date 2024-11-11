@@ -1,4 +1,4 @@
-﻿@page "/ProductoMT/Update/{id}"
+﻿@page "/ProductoMT/Update/{id:int}"
 @using PryFront_Marathon.Models
 @inject HttpClient Http
 
@@ -14,9 +14,9 @@
             <label> Descripcion </label>
             <input type="text" class="form-control" @bind-value="producto.Descripcion" />
         </div>
-        <div class="col-md-4">
-            <label> Image Front </label>
-            <input type="text" class="form-control" @bind-value="producto.Image_front" />
+         <div class="col-md-4">
+            <label> Precio </label>
+            <input type="decimal" class="form-control" @bind-value="producto.Precio" />
         </div>
      </div>
 
@@ -24,27 +24,17 @@
 
 
 
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <label> Image Back </label>
-            <input type="text" class="form-control" @bind-value="producto.Image_back" />
-        </div>
-        <div class="col-md-4">
-            <label> Precio </label>
-            <input type="decimal" class="form-control" @bind-value="producto.Precio" />
-        </div>
         <div class="row mb-4">
-        <div class="col-md-4">
-            <label> Producto </label>
-            <select class="form-select" @bind="producto.Cod_Prod" aria-label="Default select example">
-                <option value="-1" selected>--Seleccionar--</option>
-                    @foreach (var item in lista_Producto)
+            <div class="col-md-4">
+                <label> Talla </label>
+                <select class="form-select" @bind="producto.Cod_Talla" aria-label="Default select example">
+                    <option value="-1" selected>--Seleccionar--</option>
+                    @foreach (var item in lista_Talla)
                     {
-                                <option value="@item.Cod_Prod">@item.Descripcion</option>
+                                    <option value="@item.Cod_Talla">@item.Nom_Talla</option>
                     }
-            </select>
-          </div>
-        </div>
+                </select>
+           </div>
 
 
 
@@ -69,48 +59,41 @@
             </select>
         </div>
     </div>
-    <div class="col-md-4">
-            <label> Marca </label>
-            <select class="form-select" @bind="producto.Cod_Marca" aria-label="Default select example">
-                <option value="-1" selected>--Seleccionar--</option>
-            @foreach (var item in lista_Marca)
-            {
-                                <option value="@item.Cod_Marca">@item.Nom_Marca</option>
-            }
-            </select>
-        </div>
-    </div>
 
-
-
-    <div class="col-md-4">
-            <label> Categoria </label>
-            <select class="form-select" @bind="producto.Cod_Cate" aria-label="Default select example">
-                <option value="-1" selected>--Seleccionar--</option>
-        @foreach (var item in lista_Categoria)
-        {
-                            <option value="@item.Cod_Cate">@item.Nom_Cate</option>
-        }
-            </select>
-        </div>
+    <div class = "row mb-4">
         <div class="col-md-4">
-            <label> Talla </label>
-            <select class="form-select" @bind="producto.Cod_Talla" aria-label="Default select example">
-                <option value="-1" selected>--Seleccionar--</option>
-        @foreach (var item in lista_Talla)
-        {
-                            <option value="@item.Cod_Talla">@item.Nom_Talla</option>
-        }
-            </select>
-    </div>
+                <label> Marca </label>
+                <select class="form-select" @bind="producto.Cod_Marca" aria-label="Default select example">
+                    <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_Marca)
+                {
+                                        <option value="@item.Cod_Marca">@item.Nom_Marca</option>
+                }
+                </select>
+        </div>
+
+
+
+        <div class="col-md-4">
+                <label> Categoria </label>
+                <select class="form-select" @bind="producto.Cod_Cate" aria-label="Default select example">
+                    <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_Categoria)
+                {
+                                    <option value="@item.Cod_Cate">@item.Nom_Cate</option>
+                }
+                </select>
+         </div>
+
         <div class="col-md-4">
             <label> Estado </label>
             <select class="form-select" @bind="producto.Estado">
-                <option  value=0>Inactivo</option>
-                <option selected  value=1>Activo</option>
+                <option value=0>Inactivo</option>
+                <option value=1>Activo</option>
             </select>
         </div>
-
+    </div>
+        
 
     <div class="row mb-4 ">
         <div class="col-md-6">
@@ -131,8 +114,7 @@
                 </div>
             </div>
     }
-
-
+ </div>|
 
 @code {
 
@@ -152,13 +134,13 @@
 
     async Task BuscarProducto_ID(int id)
     {
-        var resp = await Http.GetFromJsonAsync<Producto>("https://localhost:44347/GetPersonalID/" + id);
+        var resp = await Http.GetFromJsonAsync<Producto>("https://localhost:7214/GetProductoID/" + id);
         producto = resp;
     }
 
     async Task UpdateProducto(int id)
     {
-        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/UpdatePersonal/" + id, producto);
+        var resJson = await Http.PostAsJsonAsync("https://localhost:7214/UpdateProducto/" + id, producto);
         res = await resJson.Content.ReadAsStringAsync();
         // Forzar que la interfaz se actualice
         StateHasChanged();
@@ -170,44 +152,40 @@
     }
 
     //Metodo para cargar la lista de perfiles
-    async Task ListadodeProducto()
-    {
-        var resp = await Http.GetFromJsonAsync<List<Producto>>("https://localhost:44347/GetListaPerfil_Personal");
-        lista_Producto = resp;
-    }
+    
 
     //Metodo para cargar la lista de Tipo de Trabajo
     async Task ListadodeModelo()
     {
-        var resp = await Http.GetFromJsonAsync<List<Modelo>>("https://localhost:44347/GetListaTipo_Trabajo");
+        var resp = await Http.GetFromJsonAsync<List<Modelo>>("https://localhost:7214/GetListaModelo");
         lista_Modelo = resp;
     }
 
     //Metodo para cargar la lista de Local
     async Task ListadodeColor()
     {
-        var resp = await Http.GetFromJsonAsync<List<Color>>("https://localhost:44347/GetListaLocalMT");
+        var resp = await Http.GetFromJsonAsync<List<Color>>("https://localhost:7214/GetListaColor");
         lista_Color = resp;
     }
 
     //Metodo para cargar la lista de Local
     async Task ListadodeMarca()
     {
-        var resp = await Http.GetFromJsonAsync<List<Marca>>("https://localhost:44347/GetListaLocalMT");
+        var resp = await Http.GetFromJsonAsync<List<Marca>>("https://localhost:7214/GetListaMarca");
         lista_Marca = resp;
     }
 
     //Metodo para cargar la lista de Local
     async Task ListadodeTalla()
     {
-        var resp = await Http.GetFromJsonAsync<List<Talla>>("https://localhost:44347/GetListaLocalMT");
+        var resp = await Http.GetFromJsonAsync<List<Talla>>("https://localhost:7214/GetListaTalla");
         lista_Talla = resp;
     }
 
     //Metodo para cargar la lista de Local
     async Task ListadodeCategoria()
     {
-        var resp = await Http.GetFromJsonAsync<List<Categoria>>("https://localhost:44347/GetListaLocalMT");
+        var resp = await Http.GetFromJsonAsync<List<Categoria>>("https://localhost:7214/GetListaCategoria");
         lista_Categoria = resp;
     }
 
@@ -215,11 +193,9 @@
     {
         //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
         await BuscarProducto_ID(id);
-        await UpdateProducto(id);
         await ListadodeColor();
         await ListadodeMarca();
         await ListadodeModelo();
-        await ListadodeProducto();
         await ListadodeTalla();
         await ListadodeCategoria();
 

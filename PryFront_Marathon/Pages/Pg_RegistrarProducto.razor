@@ -15,49 +15,25 @@
             <input type="text" class="form-control" @bind-value="producto.Descripcion" />
         </div>
         <div class="col-md-4">
-            <label> Image Front </label>
-            <input type="text" class="form-control" @bind-value="producto.Image_front" />
+            <label> Precio </label>
+            <input type="decimal" class="form-control" @bind-value="producto.Precio" />
         </div>
      </div>
 
-    
 
 
 
     <div class="row mb-4">
         <div class="col-md-4">
-            <label> Image Back </label>
-            <input type="text" class="form-control" @bind-value="producto.Image_back" />
-        </div>
-        <div class="col-md-4">
-            <label> Precio </label>
-            <input type="decimal" class="form-control" @bind-value="producto.Precio" />
-        </div>
-        <div class="row mb-4">
-        <div class="col-md-4">
-            <label> Producto </label>
-            <select class="form-select" @bind="producto.Cod_Prod" aria-label="Default select example">
-                <option value="-1" selected>--Seleccionar--</option>
-                    @foreach (var item in lista_Producto)
-                    {
-                            <option value="@item.Cod_Prod">@item.Descripcion</option>
-                    }
-            </select>
-          </div>
-        </div>
-
-
-
-        <div class="col-md-4">
-            <label> Modelo </label>
+          <label> Modelo </label>
             <select class="form-select" @bind="producto.Cod_Modelo" aria-label="Default select example">
                 <option value="-1" selected>--Seleccionar--</option>
-                @foreach (var item in lista_Modelo)
-                {
-                        <option value="@item.Cod_Modelo">@item.Nom_Modelo</option>
-                }
+            @foreach (var item in lista_Modelo)
+            {
+                            <option value="@item.Cod_Modelo">@item.Nom_Modelo</option>
+            }
             </select>
-        </div>
+        </div> 
         <div class="col-md-4">
             <label> Color </label>
             <select class="form-select" @bind="producto.Cod_Color" aria-label="Default select example">
@@ -68,7 +44,6 @@
                 }
             </select>
         </div>
-    </div>
     <div class="col-md-4">
             <label> Marca </label>
             <select class="form-select" @bind="producto.Cod_Marca" aria-label="Default select example">
@@ -79,28 +54,28 @@
             }
             </select>
         </div>
-    </div>
+ </div>
+ 
 
-
-
-    <div class="col-md-4">
+ <div class = "row mb-4">
+     <div class="col-md-4">
             <label> Categoria </label>
             <select class="form-select" @bind="producto.Cod_Cate" aria-label="Default select example">
                 <option value="-1" selected>--Seleccionar--</option>
-                @foreach (var item in lista_Categoria)
-                {
-                        <option value="@item.Cod_Cate">@item.Nom_Cate</option>
-                }
+            @foreach (var item in lista_Categoria)
+            {
+                            <option value="@item.Cod_Cate">@item.Nom_Cate</option>
+            }
             </select>
         </div>
         <div class="col-md-4">
             <label> Talla </label>
             <select class="form-select" @bind="producto.Cod_Talla" aria-label="Default select example">
                 <option value="-1" selected>--Seleccionar--</option>
-                @foreach (var item in lista_Talla)
-                {
-                        <option value="@item.Cod_Talla">@item.Nom_Talla</option>
-                }
+            @foreach (var item in lista_Talla)
+            {
+                            <option value="@item.Cod_Talla">@item.Nom_Talla</option>
+            }
             </select>
     </div>
         <div class="col-md-4">
@@ -110,7 +85,7 @@
                 <option selected  value=1>Activo</option>
             </select>
         </div>
-
+ </div>
 
 
     <div class="row mb-4 ">
@@ -118,11 +93,12 @@
             <button class="btn btn-success w-100" @onclick=IngresarProducto>Ingresar</button>
         </div>
         <div class="col-md-6">
-            <NavLink class="nav-link" href="PersonalMT">
+            <NavLink class="nav-link" href="ProductoMT">
                 <button class="btn btn-primary w-100">Regresar</button>
             </NavLink>
         </div>   
     </div>
+</div>
 
     @if (res != "")
     {
@@ -156,6 +132,7 @@
         var resJson = await Http.PostAsJsonAsync("https://localhost:7214/InsertProducto", producto);
         res = await resJson.Content.ReadAsStringAsync();
 
+        
         //Limpiamos los Componentes de la Interfaz
         producto.Cod_Modelo = -1;
         producto.Cod_Color = -1;
@@ -164,8 +141,8 @@
         producto.Nom_Prod = string.Empty;
         producto.Descripcion = string.Empty;
         producto.Precio = -1 ;
-        producto.Image_front = string.Empty ;
-        producto.Image_back = string.Empty;
+        // producto.Image_front = string.Empty ;
+        // producto.Image_back = string.Empty;
         producto.Estado = 1;
 
 
@@ -189,6 +166,7 @@
     async Task ListadodeCategoria()
     {
         var resp = await Http.GetFromJsonAsync<List<Categoria>>("https://localhost:7214/GetListaCategoria");
+        lista_Categoria = resp;
     }
 
     //Metodo para cargar la lista de Tipo de Trabajo
