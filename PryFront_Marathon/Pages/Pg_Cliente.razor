@@ -26,14 +26,11 @@ else
         <thead>
             <tr>
                 <th>Dni</th>
-                <th>Cod_Mem</th>
                 <th>Nombres y Apellidos</th>
                 <th>Correo</th>
                 <th>Fec_Nac</th>
-                <th>Genero</th>
                 <th>Puntos_Acum</th>
                 <th>Usuario</th>
-                <th>Contraseña</th>
                 <th>Estado</th>
                 <th class="m-auto">Acciones</th>
             </tr>
@@ -44,14 +41,11 @@ else
 
                 <tr>
                     <td>@ls_cli.Dni_Cliente</td>
-                    <td>@ls_cli.Cod_Mem</td>
                     <td>@ls_cli.Nombres @ls_cli.Apellidos</td>
                     <td>@ls_cli.Correo</td>
                     <td>@ls_cli.Fecha_Nac</td>
-                    <td>@ls_cli.Genero</td>
                     <td>@ls_cli.Puntos_Acum</td>
                     <td>@ls_cli.User_Cli</td>
-                    <td>@ls_cli.Contra_Cli</td>
                     <td>@ls_cli.Estado</td>
                     @{
                         string dni = ls_cli.Dni_Cliente;
@@ -85,13 +79,13 @@ else
 
     async Task ListadodeCliente()
     {
-        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaCliente");
+        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:7214/GetListaCliente");
         lista_Cliente = resp;
     }
 
     async Task EliminarCliente(string dni)
     {
-        var resJson = await Http.PostAsync("https://localhost:44347/DesactivarClienteDNI/" + dni, null);
+        var resJson = await Http.PostAsync("https://localhost:7214/Delete_Cliente/" + dni, null);
         string res = resJson.StatusCode.ToString();
         await ListadodeCliente();
     }

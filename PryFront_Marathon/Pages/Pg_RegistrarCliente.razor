@@ -19,7 +19,6 @@
             <input type="text" class="form-control" @bind-value="cliente.Apellidos" />
         </div>
     </div>
-</div>
     <div class="row mb-4">
         <div class="col-md-4">
             <label> Fecha Nacimiento </label>
@@ -37,35 +36,43 @@
                 <option value="Femenino">Femenino</option>
             </select>
         </div>
-
-    <div class="row mb-4 ">
-        <div class="col-md-4">
-            <label> Usuario </label>
-            <input type="text" class="form-control" @bind-value="cliente.User_Cli" />
-        </div>
-        <div class="col-md-4">
-            <label> Contraseña </label>
-            <input type="password" class="form-control" @bind-value="cliente.Contra_Cli" />
-        </div>
-        <div class="col-md-4">
+    </div>
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label> Usuario </label>
+                <input type="text" class="form-control" @bind-value="cliente.User_Cli" />
+            </div>
+            <div class="col-md-3">
+                <label> Contraseña </label>
+                <input type="password" class="form-control" @bind-value="cliente.Contra_Cli" />
+            </div>
+        <div class="col-md-3">
             <label> Estado </label>
             <select class="form-select" @bind="cliente.Estado">
                 <option value=0>Inactivo</option>
                 <option selected value=1>Activo</option>
             </select>
         </div>
-    </div>
+            <div class="col-md-3">
+                <label> Membresia </label>
+            <select class="form-select" disabled>
+                <option selected>Clasica</option>
+            </select>
+            </div>
+        </div>
 
-    <div class="row mb-4 ">
-        <div class="col-md-6">
-            <button class="btn btn-success w-100" @onclick=IngresarCliente>Ingresar</button>
+        <div class="row mb-4 ">
+            <div class="col-md-6">
+                <button class="btn btn-success w-100" @onclick=IngresarCliente>Ingresar</button>
+            </div>
+            <div class="col-md-6">
+                <NavLink class="nav-link" href="ClienteMT">
+                    <button class="btn btn-primary w-100">Regresar</button>
+                </NavLink>
+            </div>
         </div>
-        <div class="col-md-6">
-            <NavLink class="nav-link" href="ClientelMT">
-                <button class="btn btn-primary w-100">Regresar</button>
-            </NavLink>
-        </div>
-    </div>
+
+    
 
     @if (res != "")
     {
@@ -86,12 +93,13 @@
 
     //Listados de Cliente
     public static List<Cliente> lista_Cliente = new List<Cliente>();
+    public static List<Membresia> lista_membresia = new List<Membresia>();
     string res = "";
 
     async Task IngresarCliente()
     {
 
-        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertCliente", cliente);
+        var resJson = await Http.PostAsJsonAsync("https://localhost:7214/InsertCliente", cliente);
         res = await resJson.Content.ReadAsStringAsync();
 
         //Limpiamos los Componentes de la Interfaz
@@ -115,18 +123,18 @@
         res = "";
     }
 
-
-    //Metodo para cargar la lista de clientes
-    async Task ListadodeClientes()
+    async Task ListadodeMembresia()
     {
-        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaPerfil_Cliente");
-        lista_Cliente = resp;
+        var resp = await Http.GetFromJsonAsync<List<Membresia>>("https://localhost:7214/GetListaMembresia");
+        lista_membresia = resp;
     }
+
     protected override async Task OnInitializedAsync()
     {
-        //llamamos al metodo para cargar la lista de clientes ni bien se inicie la pagina
-        await ListadodeClientes();
+        //llamamos al metodo para cargar la lista de membresian ni bien se inicie la pagina
+        await ListadodeMembresia();
 
     }
+
 }
 

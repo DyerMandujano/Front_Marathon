@@ -37,22 +37,27 @@
             </select>
         </div>
     </div>
-    
-            <label> Usuario </label>
-    <input type="text" class="form-control" @bind-value="cliente.User_Cli" />
-        </div>
-        <div class="col-md-4">
-            <label> Contraseña </label>
-    <input type="password" class="form-control" @bind-value="cliente.Contra_Cli" />
-        </div>
-        <div class="col-md-4">
-            <label> Estado </label>
-            <select class="form-select" @bind="cliente.Estado">
-                <option value=0>Inactivo</option>
-                <option value=1>Activo</option>
-            </select>
-        </div>
-  
+
+
+
+    <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label> Usuario </label>
+                        <input type="text" class="form-control" @bind-value="cliente.User_Cli" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> Contraseña </label>
+                        <input type="password" class="form-control" @bind-value="cliente.Contra_Cli" />
+                    </div>
+                    <div class="col-md-4">
+                        <label> Estado </label>
+                        <select class="form-select" @bind="cliente.Estado">
+                            <option value=0>Inactivo</option>
+                            <option value=1>Activo</option>
+                        </select>
+                    </div>
+    </div>
+
 
     <div class="row mb-4 ">
         <div class="col-md-6">
@@ -73,6 +78,8 @@
             </div>
         </div>
     }
+</div>
+
 
 
 @code {
@@ -82,20 +89,22 @@
 
     Cliente cliente = new Cliente();
     string res = "";
+    Membresia membresia = new Membresia();
 
     //Listados de Perfiles
-    
-    public static List<Cliente> lista_Cliente = new List<Cliente>();
 
-    async Task BuscarPersonal_DNI(string dni)
+    public static List<Cliente> lista_Cliente = new List<Cliente>();
+    public static List<Membresia> lista_membresia = new List<Membresia>();
+
+    async Task BuscarCliente_DNI(string dni)
     {
-        var resp = await Http.GetFromJsonAsync<Cliente>("https://localhost:44347/GetClienteID/" + dni);
+        var resp = await Http.GetFromJsonAsync<Cliente>("https://localhost:7214/GetClienteID/" + dni);
         cliente = resp;
     }
 
     async Task UpdateCliente(string dni)
     {
-        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/UpdateCliente/" + dni, cliente);
+        var resJson = await Http.PostAsJsonAsync("https://localhost:7214/UpdateCliente/" + dni, cliente);
         res = await resJson.Content.ReadAsStringAsync();
         // Forzar que la interfaz se actualice
         StateHasChanged();
@@ -109,15 +118,22 @@
     //Metodo para cargar la lista de perfiles
     async Task ListadodeClientes()
     {
-        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaPerfil_Cliente");
+        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:7214/GetListaCliente");
         lista_Cliente = resp;
+    }
+
+    async Task ListadodeMembresia()
+    {
+        var rp = await Http.GetFromJsonAsync<List<Membresia>>("https://localhost:7214/GetListaMembresia");
+        lista_membresia = rp;
     }
 
     protected override async Task OnInitializedAsync()
     {
         //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
-        await BuscarPersonal_DNI(dni);
+        await BuscarCliente_DNI(dni);
         await ListadodeClientes();
         await UpdateCliente(dni);
+        await ListadodeMembresia();
     }
 }
