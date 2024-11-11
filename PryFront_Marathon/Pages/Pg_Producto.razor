@@ -1,0 +1,97 @@
+﻿@page "/ProductoMT"
+@using PryFront_Marathon.Models
+@inject HttpClient Http
+
+<PageTitle>Producto</PageTitle>
+
+@{
+    var registerUrl = $"ProductoMT/RegistroProducto";
+}
+
+<h3>Gestión Producto </h3>
+<div class ="p-2">
+    <NavLink class ="nav-link" href=@registerUrl>
+        <button class="btn btn-primary">Registrar Producto</button>
+    </NavLink>
+</div>
+
+@if (lista_Producto == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Nombre de Producto</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+                <th>Estado</th>
+                <th class="m-auto">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ls_prod in lista_Producto)
+            {
+
+                <tr>
+                    <td>@ls_prod.Cod_Prod</td>
+                    <td>@ls_prod.Nom_Prod</td>
+                    <td>@ls_prod.Descripcion</td>
+                    <td>@ls_prod.Precio</td>
+                    <td>@ls_prod.Image_front</td>
+                    <td>@ls_prod.Estado</td>
+                    @{
+                        int id = ls_prod.Cod_Prod;
+                        var updateUrl = $"ProductoMT/Update/{id}"; // Construcción de la URL
+                    }
+                    <td>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <NavLink class="nav-link" href=@updateUrl>
+                                    <button class="btn btn-primary">Editar</button>
+                                </NavLink>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-danger" @onclick="()=>EliminarProducto(id)">Eliminar</button>
+                            </div>
+                        </div>
+                        
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>           
+}
+
+
+@code {
+    Producto producto = new Producto();
+    public static List<Producto> lista_Producto= new List<Producto>();
+    string res = "En proceso...";
+
+
+    async Task ListadodeProducto()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Producto>>("https://localhost:7214/GetListaProducto");
+        lista_Producto= resp;
+    }
+
+    async Task EliminarProducto(int id)
+    {
+        var resJson = await Http.PostAsync("https://localhost:7214/Delete_Producto/" + id, null);
+        string res = resJson.StatusCode.ToString();
+        await ListadodeProducto();
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
+        await ListadodeProducto();
+    }
+}

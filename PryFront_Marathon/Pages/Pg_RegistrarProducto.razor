@@ -1,0 +1,231 @@
+﻿@page "/ProductoMT/RegistroProducto"
+@using PryFront_Marathon.Models
+@inject HttpClient Http
+
+<h3>Registro Producto</h3>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> Nombre Producto </label>
+            <input type="text" class="form-control" @bind-value="producto.Nom_Prod" />
+        </div>
+        <div class="col-md-4">
+            <label> Descripcion </label>
+            <input type="text" class="form-control" @bind-value="producto.Descripcion" />
+        </div>
+        <div class="col-md-4">
+            <label> Image Front </label>
+            <input type="text" class="form-control" @bind-value="producto.Image_front" />
+        </div>
+     </div>
+
+    
+
+
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> Image Back </label>
+            <input type="text" class="form-control" @bind-value="producto.Image_back" />
+        </div>
+        <div class="col-md-4">
+            <label> Precio </label>
+            <input type="decimal" class="form-control" @bind-value="producto.Precio" />
+        </div>
+        <div class="row mb-4">
+        <div class="col-md-4">
+            <label> Producto </label>
+            <select class="form-select" @bind="producto.Cod_Prod" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                    @foreach (var item in lista_Producto)
+                    {
+                            <option value="@item.Cod_Prod">@item.Descripcion</option>
+                    }
+            </select>
+          </div>
+        </div>
+
+
+
+        <div class="col-md-4">
+            <label> Modelo </label>
+            <select class="form-select" @bind="producto.Cod_Modelo" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_Modelo)
+                {
+                        <option value="@item.Cod_Modelo">@item.Nom_Modelo</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Color </label>
+            <select class="form-select" @bind="producto.Cod_Color" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_Color)
+                {
+                        <option value="@item.Cod_Color">@item.Nom_Color</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4">
+            <label> Marca </label>
+            <select class="form-select" @bind="producto.Cod_Marca" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+            @foreach (var item in lista_Marca)
+            {
+                            <option value="@item.Cod_Marca">@item.Nom_Marca</option>
+            }
+            </select>
+        </div>
+    </div>
+
+
+
+    <div class="col-md-4">
+            <label> Categoria </label>
+            <select class="form-select" @bind="producto.Cod_Cate" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_Categoria)
+                {
+                        <option value="@item.Cod_Cate">@item.Nom_Cate</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Talla </label>
+            <select class="form-select" @bind="producto.Cod_Talla" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_Talla)
+                {
+                        <option value="@item.Cod_Talla">@item.Nom_Talla</option>
+                }
+            </select>
+    </div>
+        <div class="col-md-4">
+            <label> Estado </label>
+            <select class="form-select" @bind="producto.Estado">
+                <option  value=0>Inactivo</option>
+                <option selected  value=1>Activo</option>
+            </select>
+        </div>
+
+
+
+    <div class="row mb-4 ">
+        <div class="col-md-6">
+            <button class="btn btn-success w-100" @onclick=IngresarProducto>Ingresar</button>
+        </div>
+        <div class="col-md-6">
+            <NavLink class="nav-link" href="PersonalMT">
+                <button class="btn btn-primary w-100">Regresar</button>
+            </NavLink>
+        </div>   
+    </div>
+
+    @if (res != "")
+    {
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-white text-center p-3" style="background-color: #1db971;">
+                    <strong>@res</strong>
+                </div>
+            </div>
+    }
+
+
+
+@code {
+
+    //Objeto Personal
+    Producto producto = new Producto();
+
+    //Listados de Perfiles, Tipo de Trabajo y Local
+    public static List<Color>     lista_Color     = new List<Color>();
+    public static List<Marca>     lista_Marca     = new List<Marca>();
+    public static List<Modelo>    lista_Modelo    = new List<Modelo>();
+    public static List<Producto>  lista_Producto  = new List<Producto>();
+    public static List<Talla>     lista_Talla     = new List<Talla>();
+    public static List<Categoria> lista_Categoria = new List<Categoria>();   
+
+    string res = "";
+
+    async Task IngresarProducto()
+    {
+
+        var resJson = await Http.PostAsJsonAsync("https://localhost:7214/InsertProducto", producto);
+        res = await resJson.Content.ReadAsStringAsync();
+
+        //Limpiamos los Componentes de la Interfaz
+        producto.Cod_Modelo = -1;
+        producto.Cod_Color = -1;
+        producto.Cod_Marca = -1;
+        producto.Cod_Talla = -1;
+        producto.Nom_Prod = string.Empty;
+        producto.Descripcion = string.Empty;
+        producto.Precio = -1 ;
+        producto.Image_front = string.Empty ;
+        producto.Image_back = string.Empty;
+        producto.Estado = 1;
+
+
+        // Forzar que la interfaz se actualice
+        StateHasChanged();
+
+        //Le colocamos delay para q se pueda observar el mensaje
+        await Task.Delay(2000);
+        //Limpiamos el mensaje
+        res = "";
+    }
+
+    //Metodo para cargar la lista de perfiles
+    async Task ListadodeColor()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Color>>("https://localhost:7214/GetListaColor");
+        lista_Color = resp;
+    }
+
+    //Metodo para cargar la lista de Categoria
+    async Task ListadodeCategoria()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Categoria>>("https://localhost:7214/GetListaCategoria");
+    }
+
+    //Metodo para cargar la lista de Tipo de Trabajo
+    async Task ListadodeMarca()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Marca>>("https://localhost:7214/GetListaMarca");
+        lista_Marca= resp;
+    }
+
+    //Metodo para cargar la lista de Local
+    async Task ListadodeModelo()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Modelo>>("https://localhost:7214/GetListaModelo");
+        lista_Modelo= resp;
+    }
+    //Metodo para cargar la lista de perfiles
+    async Task ListadodeProducto()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Producto>>("https://localhost:7214/GetListaProducto");
+        lista_Producto= resp;
+    }
+
+    //Metodo para cargar la lista de Tipo de Trabajo
+    async Task ListadodeTalla()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Talla>>("https://localhost:7214/GetListaTalla");
+        lista_Talla= resp;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
+        await ListadodeColor();
+        await ListadodeMarca();
+        await ListadodeModelo();
+        await ListadodeProducto();
+        await ListadodeTalla();
+        await ListadodeCategoria();
+    }
+}
