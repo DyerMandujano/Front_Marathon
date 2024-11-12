@@ -1,0 +1,104 @@
+﻿@page "/ClienteMT"
+@using PryFront_Marathon.Models
+@inject HttpClient Http
+
+<PageTitle>Cliente</PageTitle>
+
+@{
+    var registerUrl = $"ClienteMT/RegistroCliente";
+}
+
+<h3>Gestión Cliente </h3>
+<div class="p-2">
+    <NavLink class="nav-link" href=@registerUrl>
+        <button class="btn btn-primary">Registrar Cliente</button>
+    </NavLink>
+
+</div>
+
+@if (lista_Cliente == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Dni</th>
+                <th>Nombres y Apellidos</th>
+                <th>Correo</th>
+                <th>Fec_Nac</th>
+                <th>Puntos_Acum</th>
+                <th>Usuario</th>
+                <th>Estado</th>
+                <th class="m-auto">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ls_cli in lista_Cliente)
+            {
+
+                <tr>
+                    <td>@ls_cli.Dni_Cliente</td>
+                    <td>@ls_cli.Nombres @ls_cli.Apellidos</td>
+                    <td>@ls_cli.Correo</td>
+                    <td>@ls_cli.Fecha_Nac</td>
+                    <td>@ls_cli.Puntos_Acum</td>
+                    <td>@ls_cli.User_Cli</td>
+                    <td>@ls_cli.Estado</td>
+                    @{
+                        string dni = ls_cli.Dni_Cliente;
+                        var updateUrl = $"ClienteMT/Update/{dni}"; // Construcción de la URL
+                    }
+                    <td>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <NavLink class="nav-link" href=@updateUrl>
+                                    <button class="btn btn-primary">Editar</button>
+                                </NavLink>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-danger" @onclick="()=>EliminarCliente(dni)">Eliminar</button>
+                            </div>
+                        </div>
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Cliente cliente = new Cliente();
+    public static List<Cliente> lista_Cliente = new List<Cliente>();
+    string res = "En proceso...";
+
+
+    async Task ListadodeCliente()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:7214/GetListaCliente");
+        lista_Cliente = resp;
+    }
+
+    async Task EliminarCliente(string dni)
+    {
+        var resJson = await Http.PostAsync("https://localhost:7214/Delete_Cliente/" + dni, null);
+        string res = resJson.StatusCode.ToString();
+        await ListadodeCliente();
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
+        await ListadodeCliente();
+    }
+
+
+
+
+
+}
