@@ -24,28 +24,28 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Producto</th>
+                <th>ID</th>
                 <th>Nombre de Producto</th>
-                <th>Descripcion</th>
                 <th>Precio</th>
+                <th>Stock</th>
                 <th>Imagen</th>
                 <th>Estado</th>
                 <th class="m-auto">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var ls_prod in lista_Producto)
+            @foreach (var ls_prod_perso in lista_producto_perso)
             {
 
                 <tr>
-                    <td>@ls_prod.Cod_Prod</td>
-                    <td>@ls_prod.Nom_Prod</td>
-                    <td>@ls_prod.Descripcion</td>
-                    <td>@ls_prod.Precio</td>
-                    <td>@ls_prod.Image_front</td>
-                    <td>@ls_prod.Estado</td>
+                    <td>@ls_prod_perso.Cod_Prod</td>
+                    <td>@ls_prod_perso.Nom_Prod</td>
+                    <td>@ls_prod_perso.Precio</td>
+                    <td>@ls_prod_perso.Stock</td>
+                    <td>@ls_prod_perso.Image_front</td>
+                    <td>@ls_prod_perso.Estado</td>
                     @{
-                        int id = ls_prod.Cod_Prod;
+                        int id = ls_prod_perso.Cod_Prod;
                         var updateUrl = $"ProductoMT/Update/{id}"; // Construcción de la URL
                     }
                     <td>
@@ -71,19 +71,22 @@ else
 
 @code {
     Producto producto = new Producto();
+    Producto_Perso producto_Perso = new Producto_Perso();
+
     public static List<Producto> lista_Producto= new List<Producto>();
+    public static List<Producto_Perso> lista_producto_perso = new List<Producto_Perso>();
     string res = "En proceso...";
 
 
     async Task ListadodeProducto()
     {
-        var resp = await Http.GetFromJsonAsync<List<Producto>>("https://localhost:7214/GetListaProducto");
-        lista_Producto= resp;
+        var resp = await Http.GetFromJsonAsync<List<Producto_Perso>>("https://localhost:44347/GetListaProductoPerso");
+        lista_producto_perso = resp;
     }
 
     async Task EliminarProducto(int id)
     {
-        var resJson = await Http.PostAsync("https://localhost:7214/Delete_Producto/" + id, null);
+        var resJson = await Http.PostAsync("https://localhost:44347/Delete_Producto/" + id, null);
         string res = resJson.StatusCode.ToString();
         await ListadodeProducto();
     }

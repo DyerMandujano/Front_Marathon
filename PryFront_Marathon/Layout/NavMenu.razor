@@ -1,7 +1,9 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">PryFront_Marathon</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+    <div class="container-fluid d-flex justify-content-center">
+        <a class="navbar-brand" href="">
+            <img src="img/marathon.png" width="180"  alt="Marathon Logo">
+        </a>
+        <button title="Navigation menu" class="navbar-toggler ms-auto" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
@@ -11,22 +13,17 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Inicio
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="PersonalMT">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Personal
+                <i class="fa-solid fa-id-card" style="font-size: 17px; margin-right: 8px;"></i> <p style ="margin:0px;">Personal</p>
             </NavLink>
         </div>
          <div class="nav-item px-3">
             <NavLink class="nav-link" href="ProductoMT">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Producto
+                <i class="fa-solid fa-shirt" style="font-size: 17px; margin-right: 8px;"></i> <p style ="margin:0px;">Producto</p>
             </NavLink>
         </div>
     </nav>

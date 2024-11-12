@@ -14,5 +14,6 @@
         public string Image_front { get; set; }
         public string Image_back { get; set; }
         public int Estado { get; set; }
+        public int Stock { get; set; }
     }
 }

@@ -24,7 +24,7 @@
 
 
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label> Modelo </label>
             <select class="form-select" @bind="producto.Cod_Modelo" aria-label="Default select example">
                 <option value="-1" selected>--Seleccionar--</option>
@@ -34,7 +34,7 @@
             }
             </select>
         </div> 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label> Color </label>
             <select class="form-select" @bind="producto.Cod_Color" aria-label="Default select example">
                 <option value="-1" selected>--Seleccionar--</option>
@@ -44,7 +44,7 @@
                 }
             </select>
         </div>
-    <div class="col-md-4">
+        <div class="col-md-3">
             <label> Marca </label>
             <select class="form-select" @bind="producto.Cod_Marca" aria-label="Default select example">
                 <option value="-1" selected>--Seleccionar--</option>
@@ -54,21 +54,22 @@
             }
             </select>
         </div>
+        <div class="col-md-3">
+            <label> Categoria </label>
+            <select class="form-select" @bind="producto.Cod_Cate" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_Categoria)
+                {
+                    <option value="@item.Cod_Cate">@item.Nom_Cate</option>
+                }
+            </select>
+        </div>
  </div>
  
 
  <div class = "row mb-4">
-     <div class="col-md-4">
-            <label> Categoria </label>
-            <select class="form-select" @bind="producto.Cod_Cate" aria-label="Default select example">
-                <option value="-1" selected>--Seleccionar--</option>
-            @foreach (var item in lista_Categoria)
-            {
-                            <option value="@item.Cod_Cate">@item.Nom_Cate</option>
-            }
-            </select>
-        </div>
-        <div class="col-md-4">
+     
+        <div class="col-md-3">
             <label> Talla </label>
             <select class="form-select" @bind="producto.Cod_Talla" aria-label="Default select example">
                 <option value="-1" selected>--Seleccionar--</option>
@@ -77,12 +78,20 @@
                             <option value="@item.Cod_Talla">@item.Nom_Talla</option>
             }
             </select>
-    </div>
-        <div class="col-md-4">
+        </div>
+        <div class="col-md-3">
+            <label> Stock </label>
+            <input type="number" class="form-control" @bind-value="producto.Stock" />
+        </div>
+        <div class="col-md-3">
+            <label> Imagen </label>
+            <input type="text" class="form-control" @bind-value="producto.Image_front" />
+        </div>
+        <div class="col-md-3">
             <label> Estado </label>
-            <select class="form-select" @bind="producto.Estado">
-                <option  value=0>Inactivo</option>
-                <option selected  value=1>Activo</option>
+            <select class="form-select" @bind="producto.Estado" disabled>
+                <option  value =0 >Inactivo</option>
+                <option selected value =1 >Activo</option>
             </select>
         </div>
  </div>
@@ -129,7 +138,7 @@
     async Task IngresarProducto()
     {
 
-        var resJson = await Http.PostAsJsonAsync("https://localhost:7214/InsertProducto", producto);
+        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertProducto", producto);
         res = await resJson.Content.ReadAsStringAsync();
 
         
@@ -138,11 +147,12 @@
         producto.Cod_Color = -1;
         producto.Cod_Marca = -1;
         producto.Cod_Talla = -1;
+        producto.Cod_Cate = -1;
         producto.Nom_Prod = string.Empty;
         producto.Descripcion = string.Empty;
+        producto.Stock = 0;
+        producto.Image_front = string.Empty;
         producto.Precio = -1 ;
-        // producto.Image_front = string.Empty ;
-        // producto.Image_back = string.Empty;
         producto.Estado = 1;
 
 
@@ -158,41 +168,41 @@
     //Metodo para cargar la lista de perfiles
     async Task ListadodeColor()
     {
-        var resp = await Http.GetFromJsonAsync<List<Color>>("https://localhost:7214/GetListaColor");
+        var resp = await Http.GetFromJsonAsync<List<Color>>("https://localhost:44347/GetListaColor");
         lista_Color = resp;
     }
 
     //Metodo para cargar la lista de Categoria
     async Task ListadodeCategoria()
     {
-        var resp = await Http.GetFromJsonAsync<List<Categoria>>("https://localhost:7214/GetListaCategoria");
+        var resp = await Http.GetFromJsonAsync<List<Categoria>>("https://localhost:44347/GetListaCategoria");
         lista_Categoria = resp;
     }
 
     //Metodo para cargar la lista de Tipo de Trabajo
     async Task ListadodeMarca()
     {
-        var resp = await Http.GetFromJsonAsync<List<Marca>>("https://localhost:7214/GetListaMarca");
+        var resp = await Http.GetFromJsonAsync<List<Marca>>("https://localhost:44347/GetListaMarca");
         lista_Marca= resp;
     }
 
     //Metodo para cargar la lista de Local
     async Task ListadodeModelo()
     {
-        var resp = await Http.GetFromJsonAsync<List<Modelo>>("https://localhost:7214/GetListaModelo");
+        var resp = await Http.GetFromJsonAsync<List<Modelo>>("https://localhost:44347/GetListaModelo");
         lista_Modelo= resp;
     }
     //Metodo para cargar la lista de perfiles
     async Task ListadodeProducto()
     {
-        var resp = await Http.GetFromJsonAsync<List<Producto>>("https://localhost:7214/GetListaProducto");
+        var resp = await Http.GetFromJsonAsync<List<Producto>>("https://localhost:44347/GetListaProducto");
         lista_Producto= resp;
     }
 
     //Metodo para cargar la lista de Tipo de Trabajo
     async Task ListadodeTalla()
     {
-        var resp = await Http.GetFromJsonAsync<List<Talla>>("https://localhost:7214/GetListaTalla");
+        var resp = await Http.GetFromJsonAsync<List<Talla>>("https://localhost:44347/GetListaTalla");
         lista_Talla= resp;
     }
 
