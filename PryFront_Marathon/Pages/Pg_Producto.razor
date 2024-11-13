@@ -42,7 +42,7 @@ else
                     <td>@ls_prod_perso.Nom_Prod</td>
                     <td>@ls_prod_perso.Precio</td>
                     <td>@ls_prod_perso.Stock</td>
-                    <td>@ls_prod_perso.Image_front</td>
+                    <td><img src=@ls_prod_perso.Image_front style="width:70px; height:70px;" alt="Imagenes Prod"></td>
                     <td>@ls_prod_perso.Estado</td>
                     @{
                         int id = ls_prod_perso.Cod_Prod;
@@ -72,6 +72,7 @@ else
 @code {
     Producto producto = new Producto();
     Producto_Perso producto_Perso = new Producto_Perso();
+   // string img_p = "img/foto1.jpg";
 
     public static List<Producto> lista_Producto= new List<Producto>();
     public static List<Producto_Perso> lista_producto_perso = new List<Producto_Perso>();

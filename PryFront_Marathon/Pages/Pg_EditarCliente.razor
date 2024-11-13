@@ -98,13 +98,13 @@
 
     async Task BuscarCliente_DNI(string dni)
     {
-        var resp = await Http.GetFromJsonAsync<Cliente>("https://localhost:7214/GetClienteID/" + dni);
+        var resp = await Http.GetFromJsonAsync<Cliente>("https://localhost:44347/GetClienteID/" + dni);
         cliente = resp;
     }
 
     async Task UpdateCliente(string dni)
     {
-        var resJson = await Http.PostAsJsonAsync("https://localhost:7214/UpdateCliente/" + dni, cliente);
+        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/UpdateCliente/" + dni, cliente);
         res = await resJson.Content.ReadAsStringAsync();
         // Forzar que la interfaz se actualice
         StateHasChanged();
@@ -118,13 +118,13 @@
     //Metodo para cargar la lista de perfiles
     async Task ListadodeClientes()
     {
-        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:7214/GetListaCliente");
+        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaCliente");
         lista_Cliente = resp;
     }
 
     async Task ListadodeMembresia()
     {
-        var rp = await Http.GetFromJsonAsync<List<Membresia>>("https://localhost:7214/GetListaMembresia");
+        var rp = await Http.GetFromJsonAsync<List<Membresia>>("https://localhost:44347/GetListaMembresia");
         lista_membresia = rp;
     }
 
@@ -133,7 +133,6 @@
         //llamamos al metodo para cargar la lista de perfiles ni bien se inicie la pagina
         await BuscarCliente_DNI(dni);
         await ListadodeClientes();
-        await UpdateCliente(dni);
         await ListadodeMembresia();
     }
 }

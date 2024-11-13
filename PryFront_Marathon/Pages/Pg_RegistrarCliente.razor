@@ -48,7 +48,7 @@
             </div>
         <div class="col-md-3">
             <label> Estado </label>
-            <select class="form-select" @bind="cliente.Estado">
+            <select class="form-select" @bind="cliente.Estado" disabled>
                 <option value=0>Inactivo</option>
                 <option selected value=1>Activo</option>
             </select>
@@ -99,7 +99,7 @@
     async Task IngresarCliente()
     {
 
-        var resJson = await Http.PostAsJsonAsync("https://localhost:7214/InsertCliente", cliente);
+        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertCliente", cliente);
         res = await resJson.Content.ReadAsStringAsync();
 
         //Limpiamos los Componentes de la Interfaz
@@ -125,7 +125,7 @@
 
     async Task ListadodeMembresia()
     {
-        var resp = await Http.GetFromJsonAsync<List<Membresia>>("https://localhost:7214/GetListaMembresia");
+        var resp = await Http.GetFromJsonAsync<List<Membresia>>("https://localhost:44347/GetListaMembresia");
         lista_membresia = resp;
     }
 

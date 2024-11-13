@@ -79,13 +79,13 @@ else
 
     async Task ListadodeCliente()
     {
-        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:7214/GetListaCliente");
+        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaCliente");
         lista_Cliente = resp;
     }
 
     async Task EliminarCliente(string dni)
     {
-        var resJson = await Http.PostAsync("https://localhost:7214/Delete_Cliente/" + dni, null);
+        var resJson = await Http.PostAsync("https://localhost:44347/Delete_Cliente/" + dni, null);
         string res = resJson.StatusCode.ToString();
         await ListadodeCliente();
     }
