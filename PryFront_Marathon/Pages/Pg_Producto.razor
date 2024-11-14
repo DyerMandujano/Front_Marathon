@@ -10,9 +10,14 @@
 
 <h3>Gestión Producto </h3>
 <div class ="p-2">
-    <NavLink class ="nav-link" href=@registerUrl>
-        <button class="btn btn-primary">Registrar Producto</button>
-    </NavLink>
+    <div class="row">
+        <div class="col-md-2">
+            <NavLink class="nav-link" href=@registerUrl>
+                <button class="btn btn-primary">Registrar Producto</button>
+            </NavLink>
+        </div>
+    </div>
+    
 </div>
 
 @if (lista_Producto == null)
@@ -24,13 +29,14 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nombre de Producto</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Imagen</th>
-                <th>Estado</th>
-                <th class="m-auto">Acciones</th>
+                <th scope ="col">ID</th>
+                <th scope="col" class="text-center">Nombre de Producto</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Estado</th>
+                <th scope="col"><p style="padding-left:77px; margin-bottom:0px">Acciones</p></th>
+                
             </tr>
         </thead>
         <tbody>
@@ -38,17 +44,24 @@ else
             {
 
                 <tr>
-                    <td>@ls_prod_perso.Cod_Prod</td>
-                    <td>@ls_prod_perso.Nom_Prod</td>
+                    <th th scope="row">@ls_prod_perso.Cod_Prod</th>
+                    <td class="text-center">@ls_prod_perso.Nom_Prod</td>
                     <td>@ls_prod_perso.Precio</td>
                     <td>@ls_prod_perso.Stock</td>
                     <td><img src=@ls_prod_perso.Image_front style="width:70px; height:70px;" alt="Imagenes Prod"></td>
-                    <td>@ls_prod_perso.Estado</td>
+                    @if (ls_prod_perso.Estado == 1)
+                    {
+                        <td>Activo</td>
+                    }
+                    else
+                    {
+                        <td>Inactivo</td>
+                    }
                     @{
                         int id = ls_prod_perso.Cod_Prod;
                         var updateUrl = $"ProductoMT/Update/{id}"; // Construcción de la URL
                     }
-                    <td>
+                    <td class="text-center">
                         <div class="row">
                             <div class="col-md-4">
                                 <NavLink class="nav-link" href=@updateUrl>

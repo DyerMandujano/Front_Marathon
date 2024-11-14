@@ -9,12 +9,16 @@
 }
 
 <h3>Gestión Personal </h3>
-<div class="p-2">
-    <NavLink class="nav-link" href=@registerUrl>
-        <button class="btn btn-primary">Registrar Personal</button>
-    </NavLink>
-    
+<div class="row">
+    <div class="col-md-2">
+        <div class="p-2">
+            <NavLink class="nav-link" href=@registerUrl>
+                <button class="btn btn-primary">Registrar Personal</button>
+            </NavLink>
+        </div>
+    </div>
 </div>
+
 
 @if (lista_Personal == null)
 {
@@ -25,13 +29,13 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Dni</th>
-                <th>Nombres y Apellidos</th>
-                <th>Correo</th>
-                <th>Fec_Nac</th>
-                <th>Usuario</th>
-                <th>Estado</th>
-                <th class="m-auto">Acciones</th>
+                <th scope="col">Dni</th>
+                <th scope="col" class="text-center">Nombres y Apellidos</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Fec_Nac</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Estado</th>
+                <th scope="col"><p style="padding-left:62px; margin-bottom:0px">Acciones</p></th>
             </tr>
         </thead>
         <tbody>
@@ -39,17 +43,24 @@ else
             {
 
                 <tr>
-                    <td>@ls_perso.Dni_Personal</td>
-                    <td>@ls_perso.Nombres @ls_perso.Apellidos</td>
+                    <th scope="row">@ls_perso.Dni_Personal</th>
+                    <td class="text-center">@ls_perso.Nombres @ls_perso.Apellidos</td>
                     <td>@ls_perso.Correo</td>
                     <td>@ls_perso.Fecha_Nac</td>
                     <td>@ls_perso.User_Per</td>
-                    <td>@ls_perso.Estado</td>
+                    @if (ls_perso.Estado == 1)
+                    {
+                        <td>Activo</td>
+                    }
+                    else
+                    {
+                        <td>Inactivo</td>
+                    }
                     @{
                         string dni = ls_perso.Dni_Personal;
                         var updateUrl = $"PersonalMT/Update/{dni}"; // Construcción de la URL
                     }
-                    <td>
+                    <td class="text-center">
                         <div class="row">
                             <div class="col-md-4">
                                 <NavLink class="nav-link" href=@updateUrl>

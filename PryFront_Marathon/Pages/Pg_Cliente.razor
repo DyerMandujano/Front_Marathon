@@ -25,14 +25,14 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Dni</th>
-                <th>Nombres y Apellidos</th>
-                <th>Correo</th>
-                <th>Fec_Nac</th>
-                <th>Puntos_Acum</th>
-                <th>Usuario</th>
-                <th>Estado</th>
-                <th class="m-auto">Acciones</th>
+                <th scope="col">Dni</th>
+                <th scope="col" class="text-center">Nombres y Apellidos</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Fec_Nac</th>
+                <th scope="col">Puntos_Acum</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Estado</th>
+                <th scope="col"><p style="padding-left:50px; margin-bottom:0px">Acciones</p></th>
             </tr>
         </thead>
         <tbody>
@@ -40,18 +40,25 @@ else
             {
 
                 <tr>
-                    <td>@ls_cli.Dni_Cliente</td>
-                    <td>@ls_cli.Nombres @ls_cli.Apellidos</td>
+                    <th scope="row">@ls_cli.Dni_Cliente</th>
+                    <td class="text-center">@ls_cli.Nombres @ls_cli.Apellidos</td>
                     <td>@ls_cli.Correo</td>
                     <td>@ls_cli.Fecha_Nac</td>
                     <td>@ls_cli.Puntos_Acum</td>
                     <td>@ls_cli.User_Cli</td>
-                    <td>@ls_cli.Estado</td>
+                    @if (ls_cli.Estado == 1)
+                    {
+                        <td>Activo</td>
+                    }
+                    else
+                    {
+                        <td>Inactivo</td>
+                    }
                     @{
                         string dni = ls_cli.Dni_Cliente;
                         var updateUrl = $"ClienteMT/Update/{dni}"; // Construcción de la URL
                     }
-                    <td>
+                    <td class="text-center">
                         <div class="row">
                             <div class="col-md-4">
                                 <NavLink class="nav-link" href=@updateUrl>

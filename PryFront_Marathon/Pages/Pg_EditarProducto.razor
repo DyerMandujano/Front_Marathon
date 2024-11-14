@@ -2,9 +2,18 @@
 @using PryFront_Marathon.Models
 @inject HttpClient Http
 
-<h3>Actualizar Producto del ID @id</h3>
-
 <div class="container">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6 text-center">
+            <h2><strong>Actualizar Producto con ID @id</strong></h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6 text-center">
+            <img src="img/icono_modificar.png" alt="img regis cliente" style="width:250px; height:250px;" />
+        </div>
+    </div>
     <div class="row mb-4">
         <div class="col-md-4">
             <label> Nombre Producto </label>
@@ -82,7 +91,7 @@
         <div class="col-md-3">
             <div class="mb-3">
                 <label for="formFile" class="form-label">Imagen Producto</label>
-                <InputFile OnChange="OnInputFileChange" class="form-control" />
+                <InputFile OnChange="OnInputFileChange" class="form-control"/>
             </div>
         </div>
         <div class="col-md-3">
