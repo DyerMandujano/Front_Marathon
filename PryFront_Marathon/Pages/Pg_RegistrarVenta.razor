@@ -1,0 +1,279 @@
+﻿@page "/VentaMT/RegistroVenta"
+@using PryFront_Marathon.Models
+@inject HttpClient Http
+
+<div class="container">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6 text-center">
+            <h2><strong>Registro de Venta</strong></h2>
+        </div>
+    </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6 text-center">
+            <img src="img/carritoComp.png" alt="img regis cliente" style="width:150px; height:150px;" />
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label> Tipo Comprobante </label>
+            <select class="form-select" @bind="pedido_Venta.Cod_Tipo_Compro" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_tp_compro)
+                {
+                    <option value="@item.Cod_Tipo_Compro">@item.Descrip</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Tipo de Pago </label>
+            <select class="form-select" @bind="pedido_Venta.Cod_Tp_Pago" aria-label="Default select example">
+                <option value="selec" selected>--Seleccionar--</option>
+                @foreach (var item in lista_tp_pago)
+                {
+                    <option value="@item.Cod_Tp_Pago">@item.Nom_Tp_Pago</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label> Cliente </label>
+            <select class="form-select" @bind="pedido_Venta.Dni_Cliente" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_cliente)
+                {
+                    <option value="@item.Dni_Cliente">@item.Nombres @item.Apellidos</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-4">
+        
+        <div class="col-md-6">
+            <!--
+            <label> Tipo Envio </label>
+            <select class="form-select" @bind="pedido_Venta.Tipo_Envio">
+                <option selected>--Selecciona--</option>
+                <option value="EXPRESS">EXPRESS</option>
+                <option value="Recojo en Tienda">Recojo en Tienda</option>
+            </select>-->
+            <label> Tipo Envio </label>
+            <input type="text" class="form-control" @bind-value="pedido_Venta.Tipo_Envio" />
+
+        </div>
+        
+        <div class="col-md-6">
+            <label> Dirección </label>
+            <input type="text" class="form-control" @bind-value="pedido_Venta.Direccion_Envio" />
+        </div>
+    </div>
+
+    <div class="row mb-4 justify-content-center align-items-center">
+        <div class="col-md-6">
+            <button class="btn btn-success w-100" @onclick=Ingresar_Venta>Ingresar</button>
+        </div>
+    </div>
+
+    @if (res != "")
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-white text-center p-3" style="background-color: #1db971;">
+                <strong>@res</strong>
+            </div>
+        </div>
+    }
+    <!-- Detalle Venta -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6 text-center">
+            <h2><strong>Detalle Venta</strong></h2>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label> Cod. Venta </label>
+            <input type="text" name="name" class="form-control" value=@num_docu  disabled/>
+            <!-- 
+            <select class="form-select" @bind="det_pedido_venta.Cod_ped_num_docu" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_venta)
+                {
+                    <option value="@item.Num_Documento">@item.Num_Documento</option>
+                }
+            </select-->
+        </div>
+        <div class="col-md-6">
+            <label> Producto </label>
+            <select class="form-select" @bind="det_pedido_venta.Cod_prod" aria-label="Default select example">
+                <option value="-1" selected>--Seleccionar--</option>
+                @foreach (var item in lista_prod)
+                {
+                    <option value="@item.Cod_Prod">@item.Nom_Prod</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label> Cantidad </label>
+            <input type="number" class="form-control" @bind-value="det_pedido_venta.Cantidad" />
+        </div>
+        <div class="col-md-6">
+            <label> Precio Venta </label>
+            <input type="decimal" class="form-control" @bind-value="det_pedido_venta.Precio_Venta" />
+        </div>
+    </div>
+    <div class="row mb-4 ">
+        <div class="col-md-4">
+            <button class="btn btn-success w-100" @onclick=Ingresar_DetVenta>Ingresar</button>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-danger w-100" @onclick=LimpiarTodo>Limpiar Venta</button>
+        </div>
+        <div class="col-md-4">
+            <NavLink class="nav-link" href="VentasMT">
+                <button class="btn btn-primary w-100">Regresar</button>
+            </NavLink>
+        </div>
+    </div>
+    @if (res2 != "")
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-white text-center p-3" style="background-color: #1db971;">
+                <strong>@res2</strong>
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+    Pedido_Venta pedido_Venta = new Pedido_Venta();
+    DetallePedido_Venta det_pedido_venta = new DetallePedido_Venta();
+    string direc_localMT="";
+
+    //Cabezera Venta
+    public static List<Tipo_Comprobante> lista_tp_compro = new List<Tipo_Comprobante>();
+    public static List<Tipo_Pago> lista_tp_pago = new List<Tipo_Pago>();
+    public static List<Cliente> lista_cliente = new List<Cliente>();
+    public static List<LocalMT> lista_local = new List<LocalMT>();
+
+    //Detalle Venta
+    public static List<Venta> lista_venta = new List<Venta>();
+    public static List<Producto_Perso> lista_prod = new List<Producto_Perso>();
+
+
+
+
+
+    string res = "";
+    string res2 = "";
+    int num_docu;
+
+    async Task Ingresar_Venta()
+    {
+        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertPedido_Venta", pedido_Venta);
+        res = await resJson.Content.ReadAsStringAsync();
+        await ObtenerLastCodVenta();
+        //await ListarVentas();
+        // Forzar que la interfaz se actualice
+        StateHasChanged();
+
+        //Le colocamos delay para q se pueda observar el mensaje
+        await Task.Delay(2000);
+        //Limpiamos el mensaje
+        res = "";
+    }
+    async Task Ingresar_DetVenta()
+    {
+        var resJson = await Http.PostAsJsonAsync("https://localhost:44347/InsertDetPedido_Venta", det_pedido_venta);
+        res2 = await resJson.Content.ReadAsStringAsync();
+
+        //detalle venta
+        det_pedido_venta.Cod_prod = -1;
+        det_pedido_venta.Cantidad = 0;
+        det_pedido_venta.Precio_Venta = 0;
+        // Forzar que la interfaz se actualice
+        StateHasChanged();
+
+        //Le colocamos delay para q se pueda observar el mensaje
+        await Task.Delay(2000);
+        //Limpiamos el mensaje
+        res2 = "";
+    }
+
+    public void LimpiarTodo()
+    {
+        //Limpiamos los Componentes de la Interfaz
+        //cabecera venta
+        pedido_Venta.Cod_Tipo_Compro = -1;
+        pedido_Venta.Cod_Tp_Pago = -1;
+        pedido_Venta.Dni_Cliente = "selec";
+        pedido_Venta.Tipo_Envio = string.Empty;
+        pedido_Venta.Direccion_Envio = string.Empty;
+        //detalle venta
+        num_docu = 0;
+        det_pedido_venta.Cod_prod = -1;
+        det_pedido_venta.Cantidad = 0;
+        det_pedido_venta.Precio_Venta = 0;
+    }
+
+
+    async Task ListarTp_Compro()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Tipo_Comprobante>>("https://localhost:44347/GetListaTipo_Compro");
+        lista_tp_compro = resp;
+    }
+
+    async Task ListarTp_Pago()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Tipo_Pago>>("https://localhost:44347/GetListaTipo_Pago");
+        lista_tp_pago = resp;
+    }
+
+    async Task ListarClientes()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Cliente>>("https://localhost:44347/GetListaCliente");
+        lista_cliente = resp;
+    }
+
+    async Task ListarVentas()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Venta>>("https://localhost:44347/GetListaVenta");
+        lista_venta = resp;
+    }
+
+    async Task ListarProductos()
+    {
+        var resp = await Http.GetFromJsonAsync<List<Producto_Perso>>("https://localhost:44347/GetListaProductoPerso");
+        lista_prod = resp;
+    }
+    async Task ObtenerLastCodVenta()
+    {
+        var resp = await Http.GetFromJsonAsync<int>("https://localhost:44347/GetUltimoCodVenta");
+        num_docu = resp;
+    }
+    async Task ListarLocalMT()
+    {
+        var resp = await Http.GetFromJsonAsync<List<LocalMT>>("https://localhost:44347/GetListaLocalMT");
+        lista_local = resp;
+    }
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Cabezera Venta
+        //llamamos al metodo para cargar la lista de membresian ni bien se inicie la pagina
+        await ListarTp_Compro();
+        await ListarTp_Pago();
+        await ListarClientes();
+        await ListarLocalMT();
+
+        //Detalle Venta
+        //await ListarVentas();
+        await ListarProductos();
+
+    }
+
+
+}
